@@ -13,7 +13,7 @@ export default function Prueba({ ...props }) {
     return (
         <group ref={group} {...props} dispose={null}>
             <group ref={group} {...props} dispose={null}>
-                <mesh geometry={nodes.mono.geometry} material={materials.material1} />
+                <mesh geometry={nodes.mono.geometry} material={materials.material1} position={[-7.966238, -0.10155, -7.966238]} />
                 <mesh geometry={nodes.cubo.geometry} material={materials.material2} />
             </group>
         </group>
