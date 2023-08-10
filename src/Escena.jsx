@@ -19,8 +19,10 @@ export default function Escena({ ...props }) {
     return (
         <group ref={group} {...props} dispose={null}>
             <group ref={group} {...props} dispose={null}>
-                <mesh 
-                    geometry={nodes.escena.geometry} material={materials.madera} position={[-7.966238, -0.10155, -7.966238]} scale={0.5}/> 
+                <mesh geometry={nodes.Mesa.geometry} material={materials.madera} position={[-7., 0.1, -7.9]} scale={[2, 0.04, 2]}/> 
+                <mesh geometry={nodes.piso.geometry} material={materials.piso} position={[-7, -0.9, -7]} scale={[2, 0.04, 4]}/> 
+                <mesh geometry={nodes.marcoSilla.geometry} material={materials.madera} position={[-4, 0, -7]} scale={[0.5, 0.05, 0.5 ]}/> 
+                <mesh geometry={nodes.coginSilla.geometry} material={materials.cogin} position={[-4, 0.11, -7]} scale={[0.5, 0.05, 0.5 ]}/> 
             </group>
         </group>
     )
