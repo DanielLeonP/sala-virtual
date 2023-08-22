@@ -18,7 +18,7 @@ const ModelViewer = () => {
 
 const Model = ({ gltfPath }) => {
     const gltf = useLoader(GLTFLoader, gltfPath);
-    return <primitive object={gltf.scene} position={[0, 0, 0]} scale={[5, 5, 5]} />;
+    return <primitive object={gltf.scene} position={[0, 0, 0]} scale={[2, 2, 2]} />;
 };
 
 export default ModelViewer;
