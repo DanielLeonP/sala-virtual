@@ -3,7 +3,7 @@ import { useLoader } from '@react-three/fiber';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 
 const ModelViewer = () => {
-    const gltfPath = '/models/sala.glb';
+    const gltfPath = 'models/sala.glb';
 
     return (
         // <Canvas>
@@ -18,7 +18,7 @@ const ModelViewer = () => {
 
 const Model = ({ gltfPath }) => {
     const gltf = useLoader(GLTFLoader, gltfPath);
-    return <primitive object={gltf.scene} position={[0, 0, 0]} scale={[2, 2, 2]} />;
+    return <primitive object={gltf.scene} position={[0, 0, 0]} scale={[5, 5, 5]} />;
 };
 
 export default ModelViewer;
