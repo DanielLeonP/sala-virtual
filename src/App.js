@@ -1,16 +1,24 @@
-import { Suspense, useState } from 'react'
+import { Suspense, useState, useEffect } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { Environment, ContactShadows, OrbitControls, PerspectiveCamera } from '@react-three/drei'
 // import Car from './Car'
 import ModelViewer from './models/ModelViewer.jsx'
 import ShrekViewer from './models/ShrekViewer.jsx'
 import { MenuAnimations } from './components/MenuAnimations.js'
+import { JoystickButton } from './components/JoystickButton.js'
 
 // DESCARGAR MODELOS DE https://drive.google.com/drive/folders/1654D1Dti8cekUzB5c5rpE4EMnRr2V9Ko?usp=sharing
 // PONERLOS EN public/models/
 
 export default function App() {
   const [animacion, setAnimacion] = useState(0);
+  const [xPos, setXPos] = useState(0);
+  const [yPos, setYPos] = useState(0);
+  const [deltaMovement, setDeltaMovement] = useState([0, 0, 0]);
+
+  useEffect(() => {
+    setDeltaMovement([xPos, 0, yPos])
+  }, [xPos, yPos])
 
   const handleNadaClick = () => {
     setAnimacion(0)
@@ -48,8 +56,8 @@ export default function App() {
               <spotLight angle={1} position={[-80, 200, -100]} intensity={1} />
 
               {/* <Car position={[-8, 0, -2]} scale={20} rotation-y={-Math.PI / 4} /> */}
-              <ModelViewer />
-              <ShrekViewer animacion={animacion} />
+              {/* <ModelViewer /> */}
+              <ShrekViewer animacion={animacion} deltaMovement={deltaMovement} />
 
               <ContactShadows renderOrder={2} frames={1} resolution={1024} scale={120} blur={2} opacity={0.6} far={100} />
           </Suspense>
@@ -57,6 +65,7 @@ export default function App() {
           <PerspectiveCamera makeDefault position={[-30, 50, 120]} fov={35} />
       </Canvas>
       <MenuAnimations handleNadaClick={handleNadaClick} handleBaile1Click={handleBaile1Click} handleBaile2Click={handleBaile2Click} handlePatadaClick={handlePatadaClick} handleMuerteClick={handleMuerteClick} handleTodoClick={handleTodoClick} handlePoseClick={handlePoseClick} />
+      <JoystickButton setXPos={setXPos} setYPos={setYPos} />
     </>
   )
 }
