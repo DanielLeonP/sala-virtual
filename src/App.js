@@ -1,4 +1,4 @@
-import { Suspense, useState } from 'react'
+import { Suspense, useState, useEffect } from 'react'
 import { Canvas } from '@react-three/fiber'
 // import { Environment, ContactShadows, OrbitControls, PerspectiveCamera } from '@react-three/drei'
 // import ModelViewer from './components/ModelViewer.jsx'
@@ -6,12 +6,20 @@ import { Canvas } from '@react-three/fiber'
 import { MenuAnimations } from './components/MenuAnimations.js'
 import { Experience } from './components/Experience.jsx'
 import { SocketManager } from './components/SocketManager.jsx'
+import { JoystickButton } from './components/JoystickButton.js'
 
 // DESCARGAR MODELOS DE https://drive.google.com/drive/folders/1654D1Dti8cekUzB5c5rpE4EMnRr2V9Ko?usp=sharing
 // PONERLOS EN public/models/
 
 export default function App() {
   const [animacion, setAnimacion] = useState(0);
+  const [xPos, setXPos] = useState(0);
+  const [yPos, setYPos] = useState(0);
+  const [deltaMovement, setDeltaMovement] = useState([0, 0, 0]);
+
+  useEffect(() => {
+    setDeltaMovement([xPos, 0, yPos])
+  }, [xPos, yPos])
 
   const handleNadaClick = () => {
     setAnimacion(0)
@@ -49,10 +57,10 @@ export default function App() {
           
           {/* <Environment files="/skyBox2.hdr" ground={{ height: 32, radius: 130 }} />
               <spotLight angle={1} position={[-80, 200, -100]} intensity={1} />
-              <ModelViewer />
-              <ShrekViewer animacion={animacion} />
+              {/* <ModelViewer /> */}
+              {/* <ShrekViewer animacion={animacion} deltaMovement={deltaMovement} /> */}
 
-              <ContactShadows renderOrder={2} frames={1} resolution={1024} scale={120} blur={2} opacity={0.6} far={100} /> */}
+              {/* <ContactShadows renderOrder={2} frames={1} resolution={1024} scale={120} blur={2} opacity={0.6} far={100} /> */} */}
         {/* </Suspense> */}
         <Experience />
         {/* <OrbitControls enableZoom={false} enablePan={false} minPolarAngle={0} maxPolarAngle={Math.PI / 2.25} makeDefault />
@@ -62,6 +70,7 @@ export default function App() {
 
       </Canvas>
       <MenuAnimations handleNadaClick={handleNadaClick} handleBaile1Click={handleBaile1Click} handleBaile2Click={handleBaile2Click} handlePatadaClick={handlePatadaClick} handleMuerteClick={handleMuerteClick} handleTodoClick={handleTodoClick} handlePoseClick={handlePoseClick} />
+      <JoystickButton setXPos={setXPos} setYPos={setYPos} />
     </>
   )
 }

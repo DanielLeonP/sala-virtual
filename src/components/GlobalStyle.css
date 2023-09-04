@@ -24,10 +24,40 @@
     outline: none;
     border: none;
     border-radius: 2px;
+    text-decoration: none;
+
+    -moz-user-select: -moz-none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 .boton:hover{
     background-color: #273c75;
+    text-decoration: none;
 }
 .boton:active{
     background-color: black;
+}
+
+.joystick {
+    width: 200px;
+    height: 200px;
+    border: 2px solid #333;
+    background-color: rgb(0, 0, 0, 0.7);
+    border-radius: 50%;
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+}
+.handle {
+    width: 40px;
+    height: 40px;
+    background-color: rgb(255, 255, 255, 0.7);
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    cursor: pointer;
 }

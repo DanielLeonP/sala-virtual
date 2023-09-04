@@ -1,7 +1,7 @@
 {
   "name": "envmap-ground-projection",
   "version": "1.0.0",
-  "description": null,
+  "description": "",
   "keywords": [
     "cube camera",
     "reflections"
@@ -21,7 +21,8 @@
     "socket.io-client": "^4.7.2",
     "react-scripts": "5.0.1",
     "three": "0.142.0",
-    "three-stdlib": "^2.24.1"
+    "three-stdlib": "^2.24.1",
+    "react-three-gui": "^0.4.2",
   },
   "devDependencies": {
     "@babel/runtime": "7.13.8",
