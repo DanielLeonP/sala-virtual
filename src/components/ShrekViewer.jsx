@@ -3,7 +3,7 @@ import { useFrame } from '@react-three/fiber';
 import { ModelFBX } from '../components/ModelFBX.js'
 import { ModelGLTF } from '../components/ModelGLTF.js'
 
-const ShrekModel = ({ animacion, deltaMovement, position }) => {
+const ShrekModel = ({ animacion, deltaMovement, positionTest }) => {
     const [modelo, setModelo] = useState(null);
     const [xPosBefore, setXPosBefore] = useState(0);
     const [zPosBefore, setZPosBefore] = useState(0);
