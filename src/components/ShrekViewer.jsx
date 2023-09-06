@@ -3,7 +3,7 @@ import { useFrame } from '@react-three/fiber';
 import { ModelFBX } from '../components/ModelFBX.js'
 import { ModelGLTF } from '../components/ModelGLTF.js'
 
-const ShrekModel = ({ animacion, deltaMovement, positionTest }) => {
+const ShrekModel = ({ animacion, deltaMovement }) => {
     const [modelo, setModelo] = useState(null);
     const [xPosBefore, setXPosBefore] = useState(0);
     const [zPosBefore, setZPosBefore] = useState(0);
@@ -34,7 +34,7 @@ const ShrekModel = ({ animacion, deltaMovement, positionTest }) => {
                 setModelo(<></>)
                 break;
             case 1: // Salto
-                setModelo(<ModelGLTF glbPath={masterPath} reference={group} position={position} rotation={[0, 0, 0]} scale={0.04} update={0.03} animation={6} />)
+                setModelo(<ModelGLTF glbPath={masterPath} reference={group} position={position} rotation={[0, 0, 0]} scale={0.5} update={0.03} animation={6} />)
 
                 break;
             case 2: // Baile

@@ -2,7 +2,8 @@ import { atom, useAtom } from "jotai";
 import { useEffect } from "react";
 import { io } from "socket.io-client";
 
-export const socket = io("http://148.220.209.164:3001");
+const ip = '127.0.0.1'//'148.220.215.222'; //127.0.0.1
+export const socket = io(`http://${ip}:3001`);
 export const charactersAtom = atom([]);
 
 export const SocketManager = () => {

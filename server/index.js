@@ -36,11 +36,14 @@ io.on("connection", (socket) => {
   io.emit("characters", characters);
 
   socket.on("move", (position) => {
+    // console.log("Antigua posicion: ", characters)
     const character = characters.find(
       (character) => character.id === socket.id
     );
     character.position = position;
+    // console.log("Nueva posicion: ", characters)
     io.emit("characters", characters);
+
   });
 
   socket.on("disconnect", () => {

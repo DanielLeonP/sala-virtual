@@ -7,27 +7,21 @@ import {
 
 import { useAtom } from "jotai";
 import { Suspense, useEffect, useState } from "react";
+import * as THREE from "three";
 import { AnimatedWoman } from "./AnimatedWoman";
 import { charactersAtom, socket } from "./SocketManager";
-// import ShrekModel from "../ShrekViewer";
-import ShrekViewer from './ShrekViewer.jsx'
-import { JoystickButton } from "./JoystickButton";
+import ModelViewer from "./ModelViewer";
+
 export const Experience = () => {
   const [characters] = useAtom(charactersAtom);
-  const [onFloor, setOnFloor] = useState(false);
-  useCursor(onFloor);
 
-  const [xPos, setXPos] = useState(0);
-  const [yPos, setYPos] = useState(0);
-  const [deltaMovement, setDeltaMovement] = useState([0, 0, 0]);
-
-  useEffect(() => {
-    setDeltaMovement([xPos, 0, yPos])
-  }, [xPos, yPos])
+  characters.map((character, index)=>{
+    console.log(`Player ${index}: Pos: ${character.position}`)
+  })
 
   return (
     <>
-      
+
       {/* Configuraciones de escena */}
       {/* <Environment preset="sunset" /> */}
       {/* <ambientLight intensity={0.3} /> */}
@@ -41,47 +35,47 @@ export const Experience = () => {
 
 
       {/* MI PERSONAJE INFORMACION PARA ENVIAR CUANDO SE MUEVA */}
-      <mesh
+      {/* <mesh
         rotation-x={-Math.PI / 2}
         position-y={-0.001}
         onClick={(e) => socket.emit("move", [e.point.x, 0, e.point.z])}
         onPointerEnter={() => setOnFloor(true)}
         onPointerLeave={() => setOnFloor(false)}
       >
-        {/* REMPLAZAR PLANEGEOMETRY POR LA SALA */}
         <planeGeometry args={[10, 10]} />
+      </mesh> */}
 
-        {/* <meshStandardMaterial color="#f0f0f0" /> */}
-      </mesh>
-      {characters.map((character) => (
-
-        // AQUI SE RENDERIZA CADA PERSONAJE
-        <ShrekViewer
-          animacion={1}
-          key={character.id}
-          deltaMovement={deltaMovement}
-          positionTest={
-            [character.position[0],
-            character.position[1],
-            character.position[2]]
-          }
-        />
-
-        // <AnimatedWoman
-        //   key={character.id}
-        //   position={
-        //     new THREE.Vector3(
-        //       character.position[0],
-        //       character.position[1],
-        //       character.position[2]
-        //     )
-        //   }
-        //   hairColor={character.hairColor}
-        //   topColor={character.topColor}
-        //   bottomColor={character.bottomColor}
-        // />
-      ))}
-      {/* <JoystickButton setXPos={setXPos} setYPos={setYPos} /> */}
+      <ModelViewer />
+      {
+        characters.map((character) => (
+          <ModelViewer
+            key={character.id}
+            gltfPath={'models/Shrek.glb'}
+            position={
+              [character.position[0],
+              character.position[1],
+              character.position[2]
+              ]
+            }
+            scale={[10, 10, 10]}
+          />
+        ))
+      }
     </>
   );
 };
+
+
+   // <AnimatedWoman
+          //   key={character.id}
+          //   position={
+          //     new THREE.Vector3(
+          //       character.position[0],
+          //       character.position[1],
+          //       character.position[2]
+          //     )
+          //   }
+          //   hairColor={character.hairColor}
+          //   topColor={character.topColor}
+          //   bottomColor={character.bottomColor}
+          // />
