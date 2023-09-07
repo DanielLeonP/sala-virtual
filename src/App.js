@@ -11,17 +11,27 @@ import { JoystickButton } from './components/JoystickButton.js'
 // DESCARGAR MODELOS DE https://drive.google.com/drive/folders/1654D1Dti8cekUzB5c5rpE4EMnRr2V9Ko?usp=sharing
 // PONERLOS EN public/models/
 
-console.log('ip:', process.env.REACT_APP_API_URL)
 export default function App() {
   const [animacion, setAnimacion] = useState(0);
   const [xPos, setXPos] = useState(0);
   const [yPos, setYPos] = useState(0);
   const [deltaMovement, setDeltaMovement] = useState([0, 0, 0]);
 
-  useEffect(() => {
-    setDeltaMovement([xPos, 0, yPos])
-    socket.emit("move", deltaMovement)
-  }, [xPos, yPos])
+const [x, setX] = useState(0);
+const [y, setY] = useState(0);
+
+
+useEffect(() => {
+  // Este useEffect escucha cambios en deltaMovement, pero no realiza actualizaciones de estado ni emite sockets
+  socket.emit("move", deltaMovement);
+}, [deltaMovement]);
+
+useEffect(() => {
+  // Este useEffect se ejecutará solo cuando x, y, o xPos/yPos cambien
+  setX(x + xPos);
+  setY(y + yPos);
+  setDeltaMovement([x, 0, y]);
+}, [x, y, xPos, yPos]);
 
   const handleNadaClick = () => {
     setAnimacion(0)
