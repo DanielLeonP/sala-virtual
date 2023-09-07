@@ -1,9 +1,9 @@
 import { atom, useAtom } from "jotai";
 import { useEffect } from "react";
 import { io } from "socket.io-client";
-import env from 'react-dotenv'
 
-const ip = env.IP//'148.220.214.95'//'148.220.215.222'; //127.0.0.1
+const ip = process.env.REACT_APP_API_URL || "localhost";
+console.log(ip);
 export const socket = io(`http://${ip}:3001`);
 export const charactersAtom = atom([]);
 

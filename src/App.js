@@ -11,6 +11,7 @@ import { JoystickButton } from './components/JoystickButton.js'
 // DESCARGAR MODELOS DE https://drive.google.com/drive/folders/1654D1Dti8cekUzB5c5rpE4EMnRr2V9Ko?usp=sharing
 // PONERLOS EN public/models/
 
+console.log('ip:', process.env.REACT_APP_API_URL)
 export default function App() {
   const [animacion, setAnimacion] = useState(0);
   const [xPos, setXPos] = useState(0);
