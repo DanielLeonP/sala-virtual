@@ -17,8 +17,8 @@ export const JoystickButton = ({ setXPos, setYPos }) => {
                 // setXPos((position.x - 0.5));
                 // setYPos((position.y - 0.5));
 
-                setXPos(((position.x - 0.5) * 2));
-                setYPos(((position.y - 0.5) * 2));
+                setXPos(((position.x - 0.5) * 0.1));
+                setYPos(((position.y - 0.5) * 0.1));
                 const joystickRect = joystick.getBoundingClientRect();
                 const offsetX = event.clientX - joystickRect.left;
                 const offsetY = event.clientY - joystickRect.top;

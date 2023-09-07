@@ -18,9 +18,9 @@ export const Experience = () => {
   const [characters] = useAtom(charactersAtom);
 
   // console.clear();
-  characters.map((character, index) => {
-    console.log(`Player ${index}: Pos: ${character.position}`)
-  })
+  // characters.map((character, index) => {
+  //   console.log(`Player ${index}: Pos: ${character.position}`)
+  // })
 
   return (
     <>
@@ -48,7 +48,7 @@ export const Experience = () => {
         <planeGeometry args={[10, 10]} />
       </mesh> */}
 
-      <ModelViewer />
+      {/* <ModelViewer /> */}
       {
         characters.map((character, index) => (
           <>
@@ -58,7 +58,7 @@ export const Experience = () => {
               anchorX="center" // default
               anchorY="middle" // default
               position={[character.position[0],
-                3,
+                5,
               character.position[2]
               ]}
             >

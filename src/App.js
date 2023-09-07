@@ -7,6 +7,8 @@ import { MenuAnimations } from './components/MenuAnimations.js'
 import { Experience } from './components/Experience.jsx'
 import { SocketManager, socket } from './components/SocketManager.jsx'
 import { JoystickButton } from './components/JoystickButton.js'
+import { PerspectiveCamera } from '@react-three/drei'
+import { Camera } from './components/Camera.jsx'
 
 // DESCARGAR MODELOS DE https://drive.google.com/drive/folders/1654D1Dti8cekUzB5c5rpE4EMnRr2V9Ko?usp=sharing
 // PONERLOS EN public/models/
@@ -17,21 +19,21 @@ export default function App() {
   const [yPos, setYPos] = useState(0);
   const [deltaMovement, setDeltaMovement] = useState([0, 0, 0]);
 
-const [x, setX] = useState(0);
-const [y, setY] = useState(0);
+  const [x, setX] = useState(0);
+  const [y, setY] = useState(0);
 
 
-useEffect(() => {
-  // Este useEffect escucha cambios en deltaMovement, pero no realiza actualizaciones de estado ni emite sockets
-  socket.emit("move", deltaMovement);
-}, [deltaMovement]);
+  useEffect(() => {
+    socket.emit("move", deltaMovement);
+  }, [deltaMovement]);
 
-useEffect(() => {
-  // Este useEffect se ejecutará solo cuando x, y, o xPos/yPos cambien
-  setX(x + xPos);
-  setY(y + yPos);
-  setDeltaMovement([x, 0, y]);
-}, [x, y, xPos, yPos]);
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setX(x + xPos);
+      setY(y + yPos);
+      setDeltaMovement([x, 2, y]);
+    }, 1);
+  }, [x, y, xPos, yPos]);
 
   const handleNadaClick = () => {
     setAnimacion(0)
@@ -64,8 +66,10 @@ useEffect(() => {
   return (
     <>
       <SocketManager />
-      <Canvas shadows camera={{ position: [8, 8, 8], fov: 30 }}>
+      <Canvas shadows camera={{ position: [8, 8, 8], fov: 100 }}>
+        {/* <Canvas shadows > */}
 
+        {/* <Camera position={[x, 8, y]} fov={100} /> */}
         <Experience />
 
       </Canvas>
