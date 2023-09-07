@@ -1,7 +1,9 @@
 import {
+  Box,
   ContactShadows,
   Environment,
   OrbitControls,
+  Text,
   useCursor,
 } from "@react-three/drei";
 
@@ -15,7 +17,8 @@ import ModelViewer from "./ModelViewer";
 export const Experience = () => {
   const [characters] = useAtom(charactersAtom);
 
-  characters.map((character, index)=>{
+  // console.clear();
+  characters.map((character, index) => {
     console.log(`Player ${index}: Pos: ${character.position}`)
   })
 
@@ -47,18 +50,40 @@ export const Experience = () => {
 
       <ModelViewer />
       {
-        characters.map((character) => (
-          <ModelViewer
-            key={character.id}
-            gltfPath={'models/Shrek.glb'}
-            position={
-              [character.position[0],
+        characters.map((character, index) => (
+          <>
+            <Text
+              scale={[10, 10, 10]}
+              color="black" // default
+              anchorX="center" // default
+              anchorY="middle" // default
+              position={[character.position[0],
+                3,
+              character.position[2]
+              ]}
+            >
+              {`Player ${index}`}
+            </Text>
+            <Box color="#18a36e"
+              position={[character.position[0],
               character.position[1],
               character.position[2]
-              ]
-            }
-            scale={[10, 10, 10]}
-          />
+              ]}
+              scale={[3, 3, 3]}
+            />
+          </>
+
+          // <ModelViewer
+          //   key={character.id}
+          //   gltfPath={'models/Shrek.glb'}
+          //   position={
+          //     [character.position[0],
+          //     character.position[1],
+          //     character.position[2]
+          //     ]
+          //   }
+          //   scale={[10, 10, 10]}
+          // />
         ))
       }
     </>
