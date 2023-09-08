@@ -13,8 +13,9 @@ import * as THREE from "three";
 import { AnimatedWoman } from "./AnimatedWoman";
 import { charactersAtom, socket } from "./SocketManager";
 import ModelViewer from "./ModelViewer";
+import { TempObject } from "./TempObject";
 
-export const Experience = () => {
+export const Experience = ({ myId }) => {
   const [characters] = useAtom(charactersAtom);
 
   // console.clear();
@@ -50,41 +51,23 @@ export const Experience = () => {
 
       {/* <ModelViewer /> */}
       {
-        characters.map((character, index) => (
-          <>
-            <Text
-              scale={[10, 10, 10]}
-              color="black" // default
-              anchorX="center" // default
-              anchorY="middle" // default
-              position={[character.position[0],
-                5,
-              character.position[2]
-              ]}
-            >
-              {`Player ${index}`}
-            </Text>
-            <Box color="#18a36e"
-              position={[character.position[0],
-              character.position[1],
-              character.position[2]
-              ]}
-              scale={[3, 3, 3]}
-            />
-          </>
+        characters.map((character, index) => {
+          return (<TempObject key={character.id} myId={myId} character={character} index={index} />
 
-          // <ModelViewer
-          //   key={character.id}
-          //   gltfPath={'models/Shrek.glb'}
-          //   position={
-          //     [character.position[0],
-          //     character.position[1],
-          //     character.position[2]
-          //     ]
-          //   }
-          //   scale={[10, 10, 10]}
-          // />
-        ))
+            // <ModelViewer
+            //   key={character.id}
+            //   gltfPath={'models/Shrek.glb'}
+            //   position={
+            //     [character.position[0],
+            //     character.position[1],
+            //     character.position[2]
+            //     ]
+            //   }
+            //   scale={[10, 10, 10]}
+            // />
+          )
+
+        })
       }
     </>
   );

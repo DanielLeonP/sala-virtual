@@ -31,7 +31,7 @@ io.on("connection", (socket) => {
     bottomColor: generateRandomHexColor(),
   });
 
-  socket.emit("hello");
+  socket.emit("userId", socket.id);
 
   io.emit("characters", characters);
 

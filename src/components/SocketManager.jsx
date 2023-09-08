@@ -7,18 +7,21 @@ console.log(ip);
 export const socket = io(`http://${ip}:3001`);
 export const charactersAtom = atom([]);
 
-export const SocketManager = () => {
+export const SocketManager = ({ onChangeId }) => {
   const [_characters, setCharacters] = useAtom(charactersAtom);
+
   useEffect(() => {
     function onConnect() {
       console.log("connected");
+      // setMyId()
     }
     function onDisconnect() {
       console.log("disconnected");
     }
 
-    function onHello() {
-      console.log("hello");
+    function onUserId(myId) {
+      console.log("My id: ", myId);
+      onChangeId(myId)
     }
 
     function onCharacters(value) {
@@ -27,12 +30,12 @@ export const SocketManager = () => {
 
     socket.on("connect", onConnect);
     socket.on("disconnect", onDisconnect);
-    socket.on("hello", onHello);
+    socket.on("userId", onUserId);
     socket.on("characters", onCharacters);
     return () => {
       socket.off("connect", onConnect);
       socket.off("disconnect", onDisconnect);
-      socket.off("hello", onHello);
+      socket.off("userId", onUserId);
       socket.off("characters", onCharacters);
     };
   }, []);
