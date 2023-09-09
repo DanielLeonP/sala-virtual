@@ -7,8 +7,8 @@ export const Camera = ({ position }) => {
     console.log("Cambiando posición de la camara")
     useFrame(() => {
       // Update the camera's position to follow the target object
-      const [x, y, z] = position;
-      cameraRef.current.position.set(x+8, y+8, z + 8); // Adjust the offset as needed
+      const [x, y, z] = [position[0]-8, position[1]+40, position[2]+30];
+      cameraRef.current.position.set(x+8, y+8, z+8); // Adjust the offset as needed
     });
   
     return (
@@ -19,7 +19,7 @@ export const Camera = ({ position }) => {
         // aspect={window.innerWidth / window.innerHeight}
         // near={0.1}
         // far={1000}
-        position={[8, 8, 8]} // Initial camera position
+        position={[20, 20, 20]} // Initial camera position
       />
     );
 };

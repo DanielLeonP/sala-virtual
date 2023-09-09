@@ -14,15 +14,13 @@ import { Camera } from './components/Camera.jsx'
 // PONERLOS EN public/models/
 
 export default function App() {
-  const [animacion, setAnimacion] = useState(0);
+  const [x, setX] = useState(0);
+  const [y, setY] = useState(0);
   const [xPos, setXPos] = useState(0);
   const [yPos, setYPos] = useState(0);
   const [deltaMovement, setDeltaMovement] = useState([0, 0, 0]);
-
-  const [x, setX] = useState(0);
-  const [y, setY] = useState(0);
-
-
+  const [rotationBefore, setRotationBefore] = useState(0);
+  const [rotation, setRotation] = useState(0);
   const [myId, setMyId] = useState(0);
 
   const onChangeId = (myId) => {
@@ -31,49 +29,23 @@ export default function App() {
   }
 
   useEffect(() => {
-    socket.emit("move", deltaMovement);
-  }, [deltaMovement]);
-
+    socket.emit("position", deltaMovement, rotation);
+  }, [deltaMovement, rotation]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
       setX(x + xPos);
       setY(y + yPos);
-      setDeltaMovement([x, 2, y]);
+      setDeltaMovement([x, 3, y]);
 
+      if(x != 0 && y != 0){
+        let anguloRadianes = Math.atan2(xPos, yPos);
+        let anguloGrados = (anguloRadianes * (180 / Math.PI));
+        setRotationBefore((anguloGrados * 0.0175))
+        rotationBefore == 4.7250000000000005 ? setRotationBefore(rotation) : setRotation(rotationBefore);
+      }
     }, 1);
   }, [x, y, xPos, yPos]);
-
-  const handleNadaClick = () => {
-    setAnimacion(0)
-  };
-
-  const handleBaile1Click = () => {
-    setAnimacion(1)
-  };
-
-  const handleBaile2Click = () => {
-    setAnimacion(2)
-  };
-
-  const handlePatadaClick = () => {
-    setAnimacion(3)
-  };
-
-  const handleMuerteClick = () => {
-    setAnimacion(4)
-  };
-
-  const handleTodoClick = () => {
-    setAnimacion(5)
-  };
-
-  const handlePoseClick = () => {
-    setAnimacion(6)
-  };
-
-
-
 
   return (
     <>
@@ -81,7 +53,7 @@ export default function App() {
       {/* <Canvas shadows camera={{ position: [8,8,8], fov: 100 }}> */}
       <Canvas shadows >
        
-        <Camera position={deltaMovement} />
+        {/* <Camera position={deltaMovement} /> */}
         <Experience myId={myId} />
 
       </Canvas>

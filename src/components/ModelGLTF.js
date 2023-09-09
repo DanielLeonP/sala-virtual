@@ -1,40 +1,47 @@
-import React, { useEffect } from 'react';
-import * as THREE from 'three';
-// import { useLoader } from '@react-three/fiber';
-// import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
-// import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader';
-import { useGLTF } from '@react-three/drei'
+import React, { useEffect, useState } from 'react';
+import * as THREE from "three";
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 
 // Para modelos GLB
-export const ModelGLTF = ({ glbPath, reference, position, rotation, scale, update, animation }) => {
-    // const glb = useLoader(GLTFLoader, glbPath);
-    const glb = useGLTF(glbPath);
-    const mixer = new THREE.AnimationMixer(glb.scene);
+export const ModelGLTF = ({ glbPath, position, rotation, scale, update, animation }) => {
+  const [model, setModel] = useState(null);
+  const [mixer, setMixer] = useState(null); // Para gestionar las animaciones
+  const [animations, setAnimations] = useState([]);
 
-    useEffect(() => {
+  useEffect(() => {
+    const loader = new GLTFLoader();
+
+    loader.load(glbPath, (glb) => {
+        const characterModel = glb.scene;
+        setModel(characterModel);
+
+        const animMixer = new THREE.AnimationMixer(characterModel);
         const animations = glb.animations;
-        const actions = animations.map((clip) => mixer.clipAction(clip));
+        const actions = animations.map((clip) => animMixer.clipAction(clip));
         if(animation == -2){
             actions.forEach((action) => action.play());
         }else if(animation != -1){
             actions[animation].play()
         }
+        setMixer(animMixer);
+        setAnimations(actions);
+
+        // characterModel.position.set(position[0], position[1], position[2]);
+        // characterModel.rotation.set(rotation[0], rotation[1], rotation[2]);
+        // characterModel.scale.set(scale[0], scale[1], scale[2]);
 
         const animate = () => {
-            mixer.update(update);
+            animMixer.update(update);
             requestAnimationFrame(animate);
         };
         animate();
 
         return () => {
-            mixer.stopAllAction();
-            mixer.uncacheRoot(glb.scene);
+            animMixer.stopAllAction();
+            animMixer.uncacheRoot(glb.scene);
         };
-    }, [glb.animations, mixer]);
+    });
+  }, [glbPath, update, animation]);
 
-    if(animation == -2){
-        return <primitive ref={reference} object={glb.scene} position={position} rotation={rotation} scale={scale} />;
-    }
-
-    return <primitive ref={reference} object={glb.scene.children[0]} position={position} rotation={rotation} scale={scale} />;
+  return model ? <primitive object={model} position={position} rotation={rotation} scale={scale} /> : null;
 };

@@ -26,24 +26,25 @@ io.on("connection", (socket) => {
   characters.push({
     id: socket.id,
     position: generateRandomPosition(),
-    hairColor: generateRandomHexColor(),
-    topColor: generateRandomHexColor(),
-    bottomColor: generateRandomHexColor(),
+    rotation: generateRandomPosition(),
+    // hairColor: generateRandomHexColor(),
+    // topColor: generateRandomHexColor(),
+    // bottomColor: generateRandomHexColor(),
   });
 
   socket.emit("userId", socket.id);
 
   io.emit("characters", characters);
 
-  socket.on("move", (position) => {
+  socket.on("position", (position, rotation) => {
     // console.log("Antigua posicion: ", characters)
     const character = characters.find(
       (character) => character.id === socket.id
     );
     character.position = position;
+    character.rotation = rotation;
     // console.log("Nueva posicion: ", characters)
     io.emit("characters", characters);
-
   });
 
   socket.on("disconnect", () => {
