@@ -3,6 +3,7 @@ import { ModelGLTF } from './ModelGLTF.js'
 import { useEffect, useState } from 'react';
 
 export const PlayerViewer = ({ myId, index, player }) => {
+    // Si es el jugador que esta controlando el socket, se le da una estilización y características personalizadas
     if(player.id === myId){
         return(
             <>

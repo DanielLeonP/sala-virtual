@@ -27,6 +27,7 @@ io.on("connection", (socket) => {
     id: socket.id,
     position: generateRandomPosition(),
     rotation: generateRandomPosition(),
+    animation: 0,
     // hairColor: generateRandomHexColor(),
     // topColor: generateRandomHexColor(),
     // bottomColor: generateRandomHexColor(),
@@ -36,13 +37,14 @@ io.on("connection", (socket) => {
 
   io.emit("characters", characters);
 
-  socket.on("position", (position, rotation) => {
+  socket.on("position", (animation, position, rotation) => {
     // console.log("Antigua posicion: ", characters)
     const character = characters.find(
       (character) => character.id === socket.id
     );
     character.position = position;
     character.rotation = rotation;
+    character.animation = animation;
     // console.log("Nueva posicion: ", characters)
     io.emit("characters", characters);
   });

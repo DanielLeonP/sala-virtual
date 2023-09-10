@@ -7,6 +7,7 @@ import { MenuAnimations } from './components/MenuAnimations.js'
 import { Experience } from './components/Experience.jsx'
 import { SocketManager, socket } from './components/SocketManager.jsx'
 import { JoystickButton } from './components/JoystickButton.js'
+import { KeyboardButton } from './components/KeyboardButton.js'
 import { OrbitControls, PerspectiveCamera } from '@react-three/drei'
 import { Camera } from './components/Camera.jsx'
 
@@ -14,14 +15,15 @@ import { Camera } from './components/Camera.jsx'
 // PONERLOS EN public/models/
 
 export default function App() {
-  const [x, setX] = useState(0);
-  const [y, setY] = useState(0);
-  const [xPos, setXPos] = useState(0);
-  const [yPos, setYPos] = useState(0);
-  const [deltaMovement, setDeltaMovement] = useState([0, 0, 0]);
-  const [rotationBefore, setRotationBefore] = useState(0);
-  const [rotation, setRotation] = useState(0);
-  const [myId, setMyId] = useState(0);
+  const [animacion, setAnimacion] = useState(0); // Animación reproduciendose del player
+  const [x, setX] = useState(0); // Posición del player en horizontal
+  const [y, setY] = useState(0); // Posición del player en vertical
+  const [xPos, setXPos] = useState(0); // Posición en horizontal del joystick o del input de entrada de movimiento
+  const [yPos, setYPos] = useState(0); // Posición en vertical del joystick o del input de entrada de movimiento
+  const [deltaMovement, setDeltaMovement] = useState([0, 0, 0]); // Posición en los 3 ejes del player
+  const [rotationBefore, setRotationBefore] = useState(0); // Rotación que tenía al moverse el player antes de parar de moverse
+  const [rotation, setRotation] = useState(0); // Rotación que tiene al moverse el player moviéndose
+  const [myId, setMyId] = useState(0); // ID actual del jugador, character, personaje, player, de la persona que se conecta al socket, etc.
 
   const onChangeId = (myId) => {
     console.log("Obteniendo mi Id")
@@ -29,8 +31,8 @@ export default function App() {
   }
 
   useEffect(() => {
-    socket.emit("position", deltaMovement, rotation);
-  }, [deltaMovement, rotation]);
+    socket.emit("position", animacion, deltaMovement, rotation); // Se manda al socket position y rotation del player
+  }, [animacion, deltaMovement, rotation]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -38,11 +40,14 @@ export default function App() {
       setY(y + yPos);
       setDeltaMovement([x, 3, y]);
 
-      if(x != 0 && y != 0){
+      if(xPos != 0 && yPos != 0){
+        setAnimacion(12);
         let anguloRadianes = Math.atan2(xPos, yPos);
         let anguloGrados = (anguloRadianes * (180 / Math.PI));
         setRotationBefore((anguloGrados * 0.0175))
         rotationBefore == 4.7250000000000005 ? setRotationBefore(rotation) : setRotation(rotationBefore);
+      }else{
+        setAnimacion(13);
       }
     }, 1);
   }, [x, y, xPos, yPos]);
@@ -58,6 +63,7 @@ export default function App() {
 
       </Canvas>
       {/* <MenuAnimations handleNadaClick={handleNadaClick} handleBaile1Click={handleBaile1Click} handleBaile2Click={handleBaile2Click} handlePatadaClick={handlePatadaClick} handleMuerteClick={handleMuerteClick} handleTodoClick={handleTodoClick} handlePoseClick={handlePoseClick} /> */}
+      <KeyboardButton setXPos={setXPos} setYPos={setYPos} setAnimacion={setAnimacion} />
       <JoystickButton setXPos={setXPos} setYPos={setYPos} />
     </>
   )
