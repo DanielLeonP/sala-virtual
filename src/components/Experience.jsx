@@ -1,11 +1,14 @@
 import { Box, ContactShadows, Environment, OrbitControls, Text, useCursor } from "@react-three/drei";
 import { useAtom } from "jotai";
 import { useEffect, useState } from "react";
-import { charactersAtom } from "./SocketManager";
+import { charactersAtom, socket } from "./SocketManager";
 import { PlayerViewer } from "./PlayerViewer"; // Para cargar modelos con animaciones
 import { ModelViewer } from "./ModelViewer"; // Para cargar modelos sin animaciones
+import { useFrame } from "@react-three/fiber";
+import useFollowCam from "../camera/useFollowCam";
+import { Vector3 } from "three";
 
-export const Experience = ({ myId }) => {
+export const Experience = ({ myId, xPos, yPos, rotation, animation }) => {
   const [characters] = useAtom(charactersAtom); // Recuperar los characters conectados al socket
   const [numberPlayers, setNumberPlayers] = useState(0); // Cantidad de jugadores que hay en la escena
   const [players, setPlayers] = useState([]); // Los jugadores y sus atributos
@@ -16,7 +19,7 @@ export const Experience = ({ myId }) => {
   // useEffect(() => {
   //   setPlayers(characters);
   // }, [characters])
-  
+
   useEffect(() => {
     const updatePlayers = [...players]; // Copia de los jugadores actuales
     characters.forEach((character, index) => { // Por cada persona que se encuentre conectada al socket se actualizan sus datos
@@ -35,7 +38,7 @@ export const Experience = ({ myId }) => {
     })
 
     let numberCharacters = characters.length; // Cantidad de personas conectadas al socket
-    if(numberPlayers == 0 || numberCharacters != numberPlayers){ // Se comprueba que sea igual a la cantidad de jugadores actuales, si no lo es, o es 0, significa que hay un cambio y debe agregarse o quitarse algún player
+    if (numberPlayers == 0 || numberCharacters != numberPlayers) { // Se comprueba que sea igual a la cantidad de jugadores actuales, si no lo es, o es 0, significa que hay un cambio y debe agregarse o quitarse algún player
       const characterIds = new Set(characters.map(character => character.id)); // Se mapean los IDs de las personas conectadas al socket
       const updatedPlayers = players.filter(player => characterIds.has(player.id)); // Se filtra para saber qué jugadores entonces deberían seguir conectados
       characters.forEach((character, index) => { // Por cada persona conectada al socket
@@ -63,9 +66,59 @@ export const Experience = ({ myId }) => {
   //   console.log(`Player ${index}: Pos: ${character.position}`)
   // })
 
+
+
+
+
+  const [x, setX] = useState(0); // Posición del player en horizontal
+  const [y, setY] = useState(0); // Posición del player en vertical
+
+  const { pivot } = useFollowCam()
+  useFrame(() => {
+    if (xPos != 0 && yPos != 0) {
+      // console.log({ x, y })
+      setX(x + xPos);
+      setY(y + yPos);
+
+
+      console.log({ pivot: pivot, x, y });
+
+      pivot.position.lerp(new Vector3([x + 20, 20, y + 20]), 0.1);
+
+      // rotation, animacion
+      socket.emit("data", [x, 0, y], rotation, animation); // Se manda al socket position y rotation del player
+    }
+
+  });
+
+
+  // , 0.1)
+
+  // useEffect(() => {
+  //   const timer = setTimeout(() => {
+  //     setX(x + xPos);
+  //     setY(y + yPos);
+  //     setDeltaMovement([x, 3, y]);
+
+  //     // if (xPos != 0 && yPos != 0) {
+  //     //   setAnimacion(12);
+  //     //   let anguloRadianes = Math.atan2(xPos, yPos);
+  //     //   let anguloGrados = (anguloRadianes * (180 / Math.PI));
+  //     //   setRotationBefore((anguloGrados * 0.0175))
+  //     //   rotationBefore == 4.7250000000000005 ? setRotationBefore(rotation) : setRotation(rotationBefore);
+  //     // } else {
+  //     //   setAnimacion(13);
+  //     // }
+  //   }, 1);
+  // }, [x, y, xPos, yPos]);
+
+
+
+
+
   return (
     <>
-      <OrbitControls />
+      {/* <OrbitControls /> */}
       <Environment files="/skyBox2.hdr" ground={{ height: 32, radius: 130 }} />
 
       {/* MI PERSONAJE INFORMACION PARA ENVIAR CUANDO SE MUEVA */}
@@ -79,7 +132,7 @@ export const Experience = ({ myId }) => {
         <planeGeometry args={[10, 10]} />
       </mesh> */}
 
-      {/* <ModelViewer /> */}
+      <ModelViewer />
       {/* { console.log(players) } */}
       {
         players.map((player, index) => {

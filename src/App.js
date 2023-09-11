@@ -18,11 +18,9 @@ export default function App() {
   // const [path, setPath] = useState('/models/Spiderman.glb'); // Path del modelo 3D
   const [animacion, setAnimacion] = useState(0); // Animación reproduciendose del player
   // const [update, setUpdate] = useState(0); // Velocidad de laanimación reproduciendose
-  const [x, setX] = useState(0); // Posición del player en horizontal
-  const [y, setY] = useState(0); // Posición del player en vertical
+
   const [xPos, setXPos] = useState(0); // Posición en horizontal del joystick o del input de entrada de movimiento
   const [yPos, setYPos] = useState(0); // Posición en vertical del joystick o del input de entrada de movimiento
-  const [deltaMovement, setDeltaMovement] = useState([0, 0, 0]); // Posición en los 3 ejes del player
   const [rotationBefore, setRotationBefore] = useState(0); // Rotación que tenía al moverse el player antes de parar de moverse
   const [rotation, setRotation] = useState(0); // Rotación que tiene al moverse el player moviéndose
   // const [scale, setScale] = useState([0, 0, 0]); // Escala que el player
@@ -33,36 +31,19 @@ export default function App() {
     setMyId(myId)
   }
 
-  useEffect(() => {
-    socket.emit("data", deltaMovement, rotation, animacion); // Se manda al socket position y rotation del player
-  }, [deltaMovement, rotation, animacion]);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setX(x + xPos);
-      setY(y + yPos);
-      setDeltaMovement([x, 3, y]);
-
-      if(xPos != 0 && yPos != 0){
-        setAnimacion(12);
-        let anguloRadianes = Math.atan2(xPos, yPos);
-        let anguloGrados = (anguloRadianes * (180 / Math.PI));
-        setRotationBefore((anguloGrados * 0.0175))
-        rotationBefore == 4.7250000000000005 ? setRotationBefore(rotation) : setRotation(rotationBefore);
-      }else{
-        setAnimacion(13);
-      }
-    }, 1);
-  }, [x, y, xPos, yPos]);
 
   return (
     <>
       <SocketManager onChangeId={setMyId} />
-      {/* <Canvas shadows camera={{ position: [8,8,8], fov: 100 }}> */}
-      <Canvas shadows >
-       
+      <Canvas shadows camera={{ position: [8,8,8], fov: 100 }}>
+      {/* <Canvas shadows > */}
         {/* <Camera position={deltaMovement} /> */}
-        <Experience myId={myId} />
+        <Experience
+          myId={myId}
+          xPos={xPos} yPos={yPos}
+          rotation={rotation}
+          animation={animacion}
+        />
 
       </Canvas>
       {/* <MenuAnimations handleNadaClick={handleNadaClick} handleBaile1Click={handleBaile1Click} handleBaile2Click={handleBaile2Click} handlePatadaClick={handlePatadaClick} handleMuerteClick={handleMuerteClick} handleTodoClick={handleTodoClick} handlePoseClick={handlePoseClick} /> */}
