@@ -11,8 +11,12 @@ export const Experience = ({ myId }) => {
   const [players, setPlayers] = useState([]); // Los jugadores y sus atributos
 
   // CAMBIAR POR EL MODELO REAL CON SUS ANIMACIONES CUANDO SE TENGA
-  const path = '/models/Spiderman.glb'; // Path del modelo 3D del jugador 
+  const path = '/models/Spiderman.glb'; // Path del modelo 3D del jugador
 
+  // useEffect(() => {
+  //   setPlayers(characters);
+  // }, [characters])
+  
   useEffect(() => {
     const updatePlayers = [...players]; // Copia de los jugadores actuales
     characters.forEach((character, index) => { // Por cada persona que se encuentre conectada al socket se actualizan sus datos
@@ -76,6 +80,7 @@ export const Experience = ({ myId }) => {
       </mesh> */}
 
       {/* <ModelViewer /> */}
+      {/* { console.log(players) } */}
       {
         players.map((player, index) => {
           return (<PlayerViewer key={player.id} myId={myId} index={index} player={player} />)

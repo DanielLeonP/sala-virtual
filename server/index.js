@@ -25,19 +25,19 @@ io.on("connection", (socket) => {
 
   characters.push({
     id: socket.id,
+    path: "",
     position: generateRandomPosition(),
     rotation: generateRandomPosition(),
+    scale: generateRandomPosition(),
     animation: 0,
-    // hairColor: generateRandomHexColor(),
-    // topColor: generateRandomHexColor(),
-    // bottomColor: generateRandomHexColor(),
+    update: 0,
   });
 
   socket.emit("userId", socket.id);
 
   io.emit("characters", characters);
 
-  socket.on("position", (animation, position, rotation) => {
+  socket.on("data", (position, rotation, animation) => {
     // console.log("Antigua posicion: ", characters)
     const character = characters.find(
       (character) => character.id === socket.id

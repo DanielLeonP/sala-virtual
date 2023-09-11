@@ -5,9 +5,7 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 // Para modelos GLB con animaciones
 export const ModelGLTF = ({ glbPath, position, rotation, scale, update, animation }) => {
   const [model, setModel] = useState(null); // Modelo cargado
-  const [mixer, setMixer] = useState(null); // Para gestionar las animaciones
-  const [animations, setAnimations] = useState([]); // Animaciones del modelo
-
+  
   useEffect(() => {
     const loader = new GLTFLoader(); // Loader del tipo de archivo .glb
 
@@ -16,17 +14,15 @@ export const ModelGLTF = ({ glbPath, position, rotation, scale, update, animatio
         const characterModel = glb.scene; // Modelo
         setModel(characterModel);
         
-        const animMixer = new THREE.AnimationMixer(characterModel); // Mixer para controlar el esqueleto de las animaciones
+        const mixer = new THREE.AnimationMixer(characterModel); // Mixer para controlar el esqueleto de las animaciones
         const animations = glb.animations; // Animaciones disponibles en el modelo
         // console.log(animations)
-        const actions = animations.map((clip) => animMixer.clipAction(clip)); // Por cada animación se le da el moviento en un clip que se puede reproducir
+        const actions = animations.map((clip) => mixer.clipAction(clip)); // Por cada animación se le da el moviento en un clip que se puede reproducir
         if(animation == -2){ // Si la animación es -2 se reproducen todas las animaciones a la vez
             actions.forEach((action) => action.play());
         }else if(animation != -1){ // Si no es -1 quieres reproducir una animación en especifica, pero si es -1 aparecera en T-Pose
             actions[animation].play() // Se reproduce la animación seleccionada
         }
-        setMixer(animMixer);
-        setAnimations(actions);
 
         // characterModel.position.set(position[0], position[1], position[2]);
         // characterModel.rotation.set(rotation[0], rotation[1], rotation[2]);
@@ -34,14 +30,14 @@ export const ModelGLTF = ({ glbPath, position, rotation, scale, update, animatio
 
         //Función para establecer las características principales de la animación del modelo
         const animate = () => {
-            animMixer.update(update); // Se le da una velocidad a la animación reproduciendose, el animMixer contiene la animación
+            mixer.update(update); // Se le da una velocidad a la animación reproduciendose, el mixer contiene la animación
             requestAnimationFrame(animate); // Se vuelve a reproducir la animación despues de que termine
         };
         animate();
 
         return () => {
-            animMixer.stopAllAction(); // Se elimina y para la instancia de la animación reproduciendose para que no sea un loop donde se termina y el objeto se queda en el último frame de la animación sin dar paso a la siguiente
-            animMixer.uncacheRoot(glb.scene); // Se libera la caché que utilizaba la reproducción de la animación
+            mixer.stopAllAction(); // Se elimina y para la instancia de la animación reproduciendose para que no sea un loop donde se termina y el objeto se queda en el último frame de la animación sin dar paso a la siguiente
+            mixer.uncacheRoot(glb.scene); // Se libera la caché que utilizaba la reproducción de la animación
         };
     });
   }, [glbPath, update, animation]);

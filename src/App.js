@@ -15,7 +15,9 @@ import { Camera } from './components/Camera.jsx'
 // PONERLOS EN public/models/
 
 export default function App() {
+  // const [path, setPath] = useState('/models/Spiderman.glb'); // Path del modelo 3D
   const [animacion, setAnimacion] = useState(0); // Animación reproduciendose del player
+  // const [update, setUpdate] = useState(0); // Velocidad de laanimación reproduciendose
   const [x, setX] = useState(0); // Posición del player en horizontal
   const [y, setY] = useState(0); // Posición del player en vertical
   const [xPos, setXPos] = useState(0); // Posición en horizontal del joystick o del input de entrada de movimiento
@@ -23,6 +25,7 @@ export default function App() {
   const [deltaMovement, setDeltaMovement] = useState([0, 0, 0]); // Posición en los 3 ejes del player
   const [rotationBefore, setRotationBefore] = useState(0); // Rotación que tenía al moverse el player antes de parar de moverse
   const [rotation, setRotation] = useState(0); // Rotación que tiene al moverse el player moviéndose
+  // const [scale, setScale] = useState([0, 0, 0]); // Escala que el player
   const [myId, setMyId] = useState(0); // ID actual del jugador, character, personaje, player, de la persona que se conecta al socket, etc.
 
   const onChangeId = (myId) => {
@@ -31,8 +34,8 @@ export default function App() {
   }
 
   useEffect(() => {
-    socket.emit("position", animacion, deltaMovement, rotation); // Se manda al socket position y rotation del player
-  }, [animacion, deltaMovement, rotation]);
+    socket.emit("data", deltaMovement, rotation, animacion); // Se manda al socket position y rotation del player
+  }, [deltaMovement, rotation, animacion]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
