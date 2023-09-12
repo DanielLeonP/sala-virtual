@@ -11,8 +11,11 @@ export default function useFollowCam() {
     o.position.set(0, 1, 1.5)
     return o
   }, [])
+  
+  console.log({pivot})
 
   const onDocumentMouseMove = (e) => {
+    // console.log("onDocumentMouseMove")
     if (document.pointerLockElement) {
       pivot.rotation.y -= e.movementX * 0.002
       const v = followCam.rotation.x - e.movementY * 0.002
@@ -25,6 +28,7 @@ export default function useFollowCam() {
   }
 
   const onDocumentMouseWheel = (e) => {
+    // console.log("onDocumentMouseWheel")
     if (document.pointerLockElement) {
       const v = followCam.position.z + e.deltaY * 0.002
       if (v >= 0.5 && v <= 4) {

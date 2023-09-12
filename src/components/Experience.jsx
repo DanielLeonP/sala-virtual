@@ -7,6 +7,8 @@ import { ModelViewer } from "./ModelViewer"; // Para cargar modelos sin animacio
 import { useFrame } from "@react-three/fiber";
 import useFollowCam from "../camera/useFollowCam";
 import { Vector3 } from "three";
+import { ModelGLTF } from "./ModelGLTF";
+import { MyPlayer } from "./MyPlayer";
 
 export const Experience = ({ myId, xPos, yPos, rotation, animation }) => {
   const [characters] = useAtom(charactersAtom); // Recuperar los characters conectados al socket
@@ -73,7 +75,7 @@ export const Experience = ({ myId, xPos, yPos, rotation, animation }) => {
   const [x, setX] = useState(0); // Posición del player en horizontal
   const [y, setY] = useState(0); // Posición del player en vertical
 
-  const { pivot } = useFollowCam()
+  // const { pivot } = useFollowCam()
   useFrame(() => {
     if (xPos != 0 && yPos != 0) {
       // console.log({ x, y })
@@ -81,13 +83,13 @@ export const Experience = ({ myId, xPos, yPos, rotation, animation }) => {
       setY(y + yPos);
 
 
-      console.log({ pivot: pivot, x, y });
+      // console.log({ pivot: pivot, x, y });
 
-      pivot.position.lerp(new Vector3([x + 20, 20, y + 20]), 0.1);
 
       // rotation, animacion
       socket.emit("data", [x, 0, y], rotation, animation); // Se manda al socket position y rotation del player
     }
+    // pivot.position.lerp(new Vector3([50,50,50]), 0.1);
 
   });
 
@@ -118,7 +120,7 @@ export const Experience = ({ myId, xPos, yPos, rotation, animation }) => {
 
   return (
     <>
-      {/* <OrbitControls /> */}
+      <OrbitControls />
       <Environment files="/skyBox2.hdr" ground={{ height: 32, radius: 130 }} />
 
       {/* MI PERSONAJE INFORMACION PARA ENVIAR CUANDO SE MUEVA */}
@@ -139,6 +141,7 @@ export const Experience = ({ myId, xPos, yPos, rotation, animation }) => {
           return (<PlayerViewer key={player.id} myId={myId} index={index} player={player} />)
         })
       }
+      <MyPlayer myId={myId} path={path} rotation={[0, 3, 0]} x={x} y={y} />
     </>
   );
 };

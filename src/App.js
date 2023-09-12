@@ -35,7 +35,7 @@ export default function App() {
   return (
     <>
       <SocketManager onChangeId={setMyId} />
-      <Canvas shadows camera={{ position: [8,8,8], fov: 100 }}>
+      <Canvas shadows camera={{ position: [20,35,0], fov: 100 }}>
       {/* <Canvas shadows > */}
         {/* <Camera position={deltaMovement} /> */}
         <Experience
