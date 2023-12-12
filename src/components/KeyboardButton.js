@@ -1,71 +1,95 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
-export const KeyboardButton = ({ setXPos, setYPos, setAnimacion }) => {
+export const KeyboardButton = ({ setXPos, setYPos, setAnimacion, setDeltaMovement }) => {
+    const [keysPressed, setKeysPressed] = useState({});
+
     useEffect(() => {
-        // Si se presiona una tecla
-        const handleKeyDown = (event) => {
-            let velocidad = 1.5; // Velocidad de movimiento
-            let deltaX = 0; // Posición en horizontal
-            let deltaY = 0; // Posición en vertical
+        const velocidad = 1; // Velocidad de movimiento
 
-            // if ((event.key === 'ArrowUp' && event.key === 'ArrowLeft') || (event.key === 'w' && event.key === 'a')) {
-            //     deltaY = deltaY - velocidad;
-            //     deltaX = deltaX - velocidad;
-            // }
-            // if ((event.key === 'ArrowUp' && event.key === 'ArrowRight') || (event.key === 'w' && event.key === 'd')) {
-            //     deltaY = deltaY - velocidad;
-            //     deltaX = deltaX + velocidad;
-            // }
-            // if ((event.key === 'ArrowDown' && event.key === 'ArrowLeft') || (event.key === 's' && event.key === 'a')) {
-            //     deltaY = deltaY + velocidad;
-            //     deltaX = deltaX - velocidad;
-            // }
-            // if ((event.key === 'ArrowDown' && event.key === 'ArrowRight') || (event.key === 's' && event.key === 'd')) {
-            //     deltaY = deltaY + velocidad;
-            //     deltaX = deltaX + velocidad;
-            // }
-            // Arriba
-            if (event.key === 'ArrowUp' || event.key === 'w') {
-                deltaY = deltaY - velocidad;
-            }
-            // Abajo
-            if (event.key === 'ArrowDown' || event.key === 's') {
-                deltaY = deltaY + velocidad;
-            }
-            // Izquierda
-            if (event.key === 'ArrowLeft' || event.key === 'a') {
-                deltaX = deltaX - velocidad;
-            }
-            // Derecha
-            if (event.key === 'ArrowRight' || event.key === 'd') {
-                deltaX = deltaX + velocidad;
-            }
+        const handleKeyDown = (event) => {
+            // Actualizar el estado de la tecla presionada, para más de una tecla presionada
+            setKeysPressed((prevKeys) => ({
+                ...prevKeys,
+                [event.key]: true,
+            }));
 
             // Animaciones específicas al presionar una tecla
             if (event.key === '1') { setAnimacion(10) }
-            if (event.key === '2') { setAnimacion(9)}
-
-            setXPos(deltaX);
-            setYPos(deltaY);
+            if (event.key === '2') { setAnimacion(9) }
+            if (event.key === '0') { setDeltaMovement([0, 0, 0]) }
         };
 
-        // Cuando la tecla se deja de presionar
         const handleKeyUp = (event) => {
-            // Detener el movimiento cuando se suelta una tecla
-            if (event.key === 'ArrowUp' || event.key === 'ArrowDown' || event.key === 'ArrowLeft' || event.key === 'ArrowRight' || event.key === 'w' || event.key === 's' || event.key === 'a' || event.key === 'd') {
-                setXPos(0);
-                setYPos(0);
+            // Actualizar el estado de la tecla liberada
+            setKeysPressed((prevKeys) => ({
+                ...prevKeys,
+                [event.key]: false,
+            }));
+        };
+
+        const calculateVelocity = () => {
+            let deltaX = 0;
+            let deltaY = 0;
+
+            // Arriba y Derecha
+            if ((keysPressed['ArrowUp'] || keysPressed['w']) && (keysPressed['ArrowRight'] || keysPressed['d'])) {
+                deltaX = deltaX + velocidad;
+                deltaY = deltaY - velocidad;
             }
+            // Arriba y Izquierda
+            if ((keysPressed['ArrowUp'] || keysPressed['w']) && (keysPressed['ArrowLeft'] || keysPressed['a'])) {
+                deltaX = deltaX - velocidad;
+                deltaY = deltaY - velocidad;
+            }
+            // Abajo y Derecha
+            if ((keysPressed['ArrowDown'] || keysPressed['s']) && (keysPressed['ArrowRight'] || keysPressed['d'])) {
+                deltaX = deltaX + velocidad;
+                deltaY = deltaY + velocidad;
+            }
+            // Abajo y Izquierda
+            if ((keysPressed['ArrowDown'] || keysPressed['s']) && (keysPressed['ArrowLeft'] || keysPressed['a'])) {
+                deltaX = deltaX - velocidad;
+                deltaY = deltaY + velocidad;
+            }
+            // Arriba
+            if (keysPressed['ArrowUp'] || keysPressed['w']) {
+                deltaY = deltaY - velocidad;
+            }
+            // Abajo
+            if (keysPressed['ArrowDown'] || keysPressed['s']) {
+                deltaY = deltaY + velocidad;
+            }
+            // Izquierda
+            if (keysPressed['ArrowLeft'] || keysPressed['a']) {
+                deltaX = deltaX - velocidad;
+            }
+            // Derecha
+            if (keysPressed['ArrowRight'] || keysPressed['d']) {
+                deltaX = deltaX - velocidad;
+            }
+
+            console.log(deltaX - " + " - deltaY)
+
+            // Actualizar las posiciones de las teclas
+            setXPos(deltaX);
+            setYPos(deltaY);
         };
 
         // Agregar event listeners para el teclado
         window.addEventListener('keydown', handleKeyDown);
         window.addEventListener('keyup', handleKeyUp);
 
-        // Eliminar event listeners al desmontar el componente
+        // Calcular la velocidad y actualizar las posiciones en cada fotograma
+        const animationFrameId = requestAnimationFrame(function update() {
+            calculateVelocity();
+            // requestAnimationFrame(update);
+        });
+
+        // Eliminar event listeners y cancelar la animación
         return () => {
-            window.removeEventListener('keydown', handleKeyDown);
-            window.removeEventListener('keyup', handleKeyUp);
+            window.removeEventListener('keydown', handleKeyDown); // Se deja de escuchar la pulsación abajo
+            window.removeEventListener('keyup', handleKeyUp); // Se deja de escuchar la pulsación arriba
+            cancelAnimationFrame(animationFrameId); // Cancela la animación
         };
-    }, [setXPos, setYPos]);
+    }, [setXPos, setYPos, keysPressed]);
 };
